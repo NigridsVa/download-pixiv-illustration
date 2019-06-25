@@ -1,0 +1,13 @@
+#!/usr/bin/env node
+
+const program = require("commander");
+const dpi = require("../lib/download-pixiv-illustration");
+const pkg = require("../package.json");
+
+program
+  .description("Downloads all pictures or videos for Pixiv illustration URLs")
+  .usage("url [url]...")
+  .version(pkg.version, "-v, --version")
+  .parse(process.argv);
+
+dpi.run(program.args);

@@ -1,0 +1,32 @@
+{
+  "name": "download-pixiv-manga",
+  "version": "0.0.1",
+  "description": "Uses Selenium to downloads all images or the animation belonging to a pixiv illustration URL",
+  "main": "lib/download-pixiv-illustration",
+  "scripts": {
+    "lint": "eslint bin/* lib"
+  },
+  "bin": {
+    "download-pixiv-illustration": "./bin/download-pixiv-illustration",
+    "dpi": "./bin/dpi"
+  },
+  "keywords": [
+    "pixiv",
+    "download",
+    "images",
+    "illustrations"
+  ],
+  "author": "Christoph Berg <christoph.berg@mailbox.org>",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "commander": "2.20.0",
+    "node-alias": "1.0.4",
+    "selenium-webdriver": "4.0.0-alpha.3"
+  },
+  "devDependencies": {
+    "eslint": "5.16.0",
+    "husky": "2.5.0",
+    "prettier": "1.18.2",
+    "pretty-quick": "1.11.1"
+  }
+}
