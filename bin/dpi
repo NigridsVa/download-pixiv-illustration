@@ -6,7 +6,7 @@ const pkg = require("../package.json");
 
 program
   .description("Downloads all pictures or videos for Pixiv illustration URLs")
-  .usage("url [url]...")
+  .usage("SESSION-ID URL [URL]...")
   .option(
     "-v, --verbose",
     'Makes dpi verbose during the operation. Useful for debugging and seeing what\'s going on "under the hood".'
@@ -14,4 +14,6 @@ program
   .version(pkg.version, "-V, --version")
   .parse(process.argv);
 
-dpi.run(program.args, program.opts());
+const [sessionId, ...urls] = program.args;
+
+dpi.run(sessionId, urls, program.opts());
