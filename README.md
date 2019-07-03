@@ -1,13 +1,24 @@
 # download-pixiv-illustration
 
 Node.js based script using Selenium to download all corresponding images
-belonging to a Pixiv illustration.
+belonging to a private Pixiv illustration.
 
 ## Usage
 
 ```bash
-$ dpi e21424438ac9facb92ab2f50705844d9 'https://www.pixiv.net/member_illust.php?mode=medium&illust_id=75568899'
+$ dpi e21424438ac9facb92ab2f50705844d9 'https://www.pixiv.net/member_illust.php?mode=medium&illust_id=75609833'
+Preparing Pixiv session
+Retrieving information for Pixiv 1 illustration(s)
+Downloading image https://i.pximg.net/img-original/img/2019/06/27/13/06/11/75428975-993addf2a520d52c3f597c220883f897_p0.jpg
+Downloading image https://i.pximg.net/img-original/img/2019/06/27/13/06/11/75428975-993addf2a520d52c3f597c220883f897_p1.jpg
+Downloading image https://i.pximg.net/img-original/img/2019/06/27/13/06/11/75428975-993addf2a520d52c3f597c220883f897_p2.jpg
+Downloading image https://i.pximg.net/img-original/img/2019/06/27/13/06/11/75428975-993addf2a520d52c3f597c220883f897_p3.jpg
+Downloading image https://i.pximg.net/img-original/img/2019/06/27/13/06/11/75428975-993addf2a520d52c3f597c220883f897_p4.jpg
+Downloading image https://i.pximg.net/img-original/img/2019/06/27/13/06/11/75428975-993addf2a520d52c3f597c220883f897_p5.jpg
 
+$ ls *.jpg
+75428975-993addf2a520d52c3f597c220883f897_p0.jpg  75428975-993addf2a520d52c3f597c220883f897_p2.jpg  75428975-993addf2a520d52c3f597c220883f897_p4.jpg
+75428975-993addf2a520d52c3f597c220883f897_p1.jpg  75428975-993addf2a520d52c3f597c220883f897_p3.jpg  75428975-993addf2a520d52c3f597c220883f897_p5.jpg
 ```
 
 The downloaded pictures will be stored in the directory, where `dpi` is

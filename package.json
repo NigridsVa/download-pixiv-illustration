@@ -21,6 +21,7 @@
   "dependencies": {
     "commander": "2.20.0",
     "node-alias": "1.0.4",
+    "request": "^2.88.0",
     "selenium-webdriver": "4.0.0-alpha.3"
   },
   "devDependencies": {
