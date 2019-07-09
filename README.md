@@ -24,6 +24,11 @@ $ ls *.jpg
 The downloaded pictures will be stored in the directory, where `dpi` is
 currently executed from.
 
+## Options
+
+    -v, --verbose  Makes dpi verbose during the operation. Useful for debugging
+                   and seeing what's going on "under the hood".
+
 ## Background
 
 Before Pixiv changed their illustration pages to require JavaScript to show
