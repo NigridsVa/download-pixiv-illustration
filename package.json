@@ -1,6 +1,6 @@
 {
   "name": "download-pixiv-manga",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Uses Selenium to downloads all images or the animation belonging to a pixiv illustration URL",
   "main": "lib/download-pixiv-illustration",
   "scripts": {
