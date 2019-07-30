@@ -3,6 +3,8 @@
 Node.js based script using Selenium to download all corresponding images
 belonging to a private Pixiv illustration.
 
+[![Build Status](https://travis-ci.com/NigridsVa/download-pixiv-illustration.svg?branch=master)](https://travis-ci.com/NigridsVa/download-pixiv-illustration)
+
 ## Usage
 
 ```bash
