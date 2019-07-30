@@ -4,7 +4,8 @@
   "description": "Uses Selenium to downloads all images or the animation belonging to a pixiv illustration URL",
   "main": "lib/download-pixiv-illustration",
   "scripts": {
-    "lint": "eslint bin/* lib"
+    "lint": "eslint bin/* lib",
+    "test": "exit 0"
   },
   "bin": {
     "download-pixiv-illustration": "./bin/download-pixiv-illustration",
