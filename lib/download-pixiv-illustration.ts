@@ -1,61 +1,52 @@
 "use strict";
 
+import { Builder, WebDriver } from "selenium-webdriver";
+import { Options, ServiceBuilder } from "selenium-webdriver/firefox";
+
+import * as fs from "fs";
+import * as request from "request";
+
+type ProgramOptions = {
+  [key: string]: object;
+};
+
 const pixivUrlPrefix = "https://www.pixiv.net/member_illust.php";
 const pixivSessionCookieName = "PHPSESSID";
 
-const { Builder } = require("selenium-webdriver");
-const Firefox = require("selenium-webdriver/firefox");
-
-const fs = require("fs");
-const request = require("request");
-
 class PixivAuthor {
-  constructor(id, name) {
-    this._id = id;
-    this._name = name;
-  }
+  constructor(private readonly _id: string, private readonly _name: string) {}
 
-  get id() {
+  get id(): string {
     return this._id;
   }
 
-  get name() {
+  get name(): string {
     return this._name;
   }
 }
 
 class PixivImage {
-  constructor(url, filename) {
-    this._url = url;
-    this._filename = filename;
-  }
+  constructor(private readonly _url: URL, private readonly _filename: string) {}
 
-  get url() {
+  get url(): URL {
     return this._url;
   }
 
-  get filename() {
+  get filename(): string {
     return this._filename;
   }
 }
 
 class PixivIllustration {
-  constructor(url, title, author) {
-    this._url = url;
-    this._title = title;
-    this._author = author;
-    this._images = [];
-  }
+  private _images: PixivImage[] = [];
 
-  set url(url) {
-    this._url = url;
-  }
+  constructor(
+    private readonly _url: string,
+    private readonly _title: string,
+    private readonly _author: PixivAuthor
+  ) {}
 
-  get title() {
-    return this._title;
-  }
-
-  addImage(url) {
+  addImage(url: URL): void {
     // Use the filename of the downloaded file
     const parts = url.pathname.split("/");
     const filename = parts[parts.length - 1];
@@ -63,34 +54,41 @@ class PixivIllustration {
     this._images.push(new PixivImage(url, `${this.path}/${filename}`));
   }
 
-  get images() {
+  get images(): PixivImage[] {
     return this._images;
   }
 
-  get url() {
+  get url(): string {
     return this._url;
   }
 
-  get path() {
+  get path(): string {
     return `${this._author.name} (${this._author.id})/${this._title}`;
   }
 }
 
-async function configureWebdriver(options) {
+async function configureWebdriver(options: ProgramOptions): Promise<WebDriver> {
   const builder = new Builder().forBrowser("firefox");
 
   if (options.verbose) {
-    builder.setFirefoxService(
-      new Firefox.ServiceBuilder().enableVerboseLogging().setStdio("inherit")
+    // selenium-webdriver types are currently missing definitions for these
+    // methods
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (builder as any).setFirefoxService(
+      new ServiceBuilder().enableVerboseLogging().setStdio("inherit")
     );
   } else {
-    builder.setFirefoxOptions(new Firefox.Options().headless());
+    builder.setFirefoxOptions(new Options().headless());
   }
 
   return builder.build();
 }
 
-async function setSessionCookie(sessionId, webDriver, options) {
+async function setSessionCookie(
+  sessionId: string,
+  webDriver: WebDriver,
+  options: ProgramOptions
+): Promise<void> {
   await webDriver.get("https://www.pixiv.net/");
 
   await webDriver.manage().deleteCookie(pixivSessionCookieName);
@@ -116,7 +114,10 @@ async function setSessionCookie(sessionId, webDriver, options) {
   }
 }
 
-async function extractInformation(url, webDriver) {
+async function extractInformation(
+  url: string,
+  webDriver: WebDriver
+): Promise<PixivIllustration> {
   await webDriver.get(url);
 
   const titleElement = await webDriver.findElement({ css: "h1" });
@@ -169,7 +170,9 @@ async function extractInformation(url, webDriver) {
   return pixivIllustration;
 }
 
-function downloadIllustrationImages(pixivIllustration) {
+function downloadIllustrationImages(
+  pixivIllustration: PixivIllustration
+): void {
   if (!fs.existsSync(pixivIllustration.path)) {
     fs.mkdirSync(pixivIllustration.path, { recursive: true });
   }
@@ -184,7 +187,11 @@ function downloadIllustrationImages(pixivIllustration) {
   });
 }
 
-async function run(sessionId, urls = [], options) {
+export async function run(
+  sessionId: string,
+  urls: string[] = [],
+  options: ProgramOptions
+): Promise<void> {
   if (!sessionId) {
     console.log("Please specify the Pixiv session id of an existing login.");
     process.exit(1);
@@ -232,7 +239,3 @@ async function run(sessionId, urls = [], options) {
     downloadIllustrationImages(illustration)
   );
 }
-
-module.exports = {
-  run
-};

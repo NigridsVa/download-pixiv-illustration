@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
-const program = require("commander");
-const dpi = require("../lib/download-pixiv-illustration");
-const pkg = require("../package.json");
+import * as program from "commander";
+import * as pkg from "../package.json";
+
+import { run } from "../lib/download-pixiv-illustration";
 
 program
   .description("Downloads all pictures or videos for Pixiv illustration URLs")
@@ -16,4 +17,4 @@ program
 
 const [sessionId, ...urls] = program.args;
 
-dpi.run(sessionId, urls, program.opts());
+run(sessionId, urls, program.opts());

@@ -1,15 +1,16 @@
 {
   "name": "download-pixiv-manga",
-  "version": "0.0.3",
-  "description": "Uses Selenium to downloads all images or the animation belonging to a pixiv illustration URL",
+  "version": "0.1.0",
+  "description": "Uses Selenium to downloads all images or the animation belonging to a Pixiv illustration URL",
   "main": "lib/download-pixiv-illustration",
   "scripts": {
-    "lint": "eslint bin/* lib",
+    "build": "tsc --build && chmod +x dist/bin/*.js && mv dist/bin/dpi.js dist/bin/dpi && mv dist/bin/download-pixiv-illustration.js dist/bin/download-pixiv-illustration",
+    "lint": "eslint bin/* lib/*",
     "test": "exit 0"
   },
   "bin": {
-    "download-pixiv-illustration": "./bin/download-pixiv-illustration",
-    "dpi": "./bin/dpi"
+    "download-pixiv-illustration": "dist/bin/download-pixiv-illustration.js",
+    "dpi": "dist/bin/dpi.js"
   },
   "keywords": [
     "pixiv",
@@ -17,18 +18,26 @@
     "images",
     "illustrations"
   ],
-  "author": "Christoph Berg <christoph.berg@mailbox.org>",
+  "author": "NigridsVa <nigridsva@mailbox.org>",
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "commander": "2.20.0",
+    "commander": "3.0.1",
     "node-alias": "1.0.4",
     "request": "^2.88.0",
     "selenium-webdriver": "4.0.0-alpha.3"
   },
   "devDependencies": {
-    "eslint": "6.0.1",
-    "husky": "3.0.1",
+    "@types/node": "12.7.5",
+    "@types/request": "2.48.3",
+    "@types/selenium-webdriver": "4.0.2",
+    "@typescript-eslint/eslint-plugin": "2.3.0",
+    "@typescript-eslint/parser": "2.3.0",
+    "eslint": "6.4.0",
+    "eslint-config-prettier": "6.3.0",
+    "eslint-plugin-prettier": "3.1.1",
+    "husky": "3.0.5",
     "prettier": "1.18.2",
-    "pretty-quick": "1.11.1"
+    "pretty-quick": "1.11.1",
+    "typescript": "3.6.3"
   }
 }
