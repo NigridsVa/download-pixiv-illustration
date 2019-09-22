@@ -4,7 +4,7 @@
   "description": "Uses Selenium to downloads all images or the animation belonging to a Pixiv illustration URL",
   "main": "lib/download-pixiv-illustration",
   "scripts": {
-    "build": "tsc --build && chmod +x dist/bin/*.js && mv dist/bin/dpi{.js,} && mv dist/bin/download-pixiv-illustration{.js,}",
+    "build": "tsc --build && chmod +x dist/bin/*.js && mv dist/bin/dpi.js dist/bin/dpi && mv dist/bin/download-pixiv-illustration.js dist/bin/download-pixiv-illustration",
     "lint": "eslint bin/* lib/*",
     "test": "exit 0"
   },
