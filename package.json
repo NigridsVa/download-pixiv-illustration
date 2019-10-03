@@ -23,13 +23,10 @@
   "dependencies": {
     "commander": "3.0.1",
     "node-alias": "1.0.4",
-    "request": "^2.88.0",
-    "selenium-webdriver": "4.0.0-alpha.3"
+    "pixiv-client": "0.3.0"
   },
   "devDependencies": {
     "@types/node": "12.7.5",
-    "@types/request": "2.48.3",
-    "@types/selenium-webdriver": "4.0.2",
     "@typescript-eslint/eslint-plugin": "2.3.0",
     "@typescript-eslint/parser": "2.3.0",
     "eslint": "6.4.0",
