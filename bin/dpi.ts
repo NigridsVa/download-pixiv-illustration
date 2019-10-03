@@ -6,8 +6,10 @@ import * as pkg from "../package.json";
 import { run } from "../lib/download-pixiv-illustration";
 
 program
-  .description("Downloads all pictures or videos for Pixiv illustration URLs")
-  .usage("SESSION-ID URL [URL]...")
+  .description("Downloads all pictures or videos for Pixiv illustrations")
+  .usage("ILLUSTRATION_ID [ILLUSTRATION_ID]...")
+  .option("-u, --username <username>", "Username of an existing Pixiv account.")
+  .option("-p, --password <password>", "Password of an existing Pixiv account.")
   .option(
     "-v, --verbose",
     'Makes dpi verbose during the operation. Useful for debugging and seeing what\'s going on "under the hood".'
@@ -15,6 +17,6 @@ program
   .version(pkg.version, "-V, --version")
   .parse(process.argv);
 
-const [sessionId, ...urls] = program.args;
+const [...illustrationIds] = program.args;
 
-run(sessionId, urls, program.opts());
+run(illustrationIds, program.opts());
