@@ -8,7 +8,7 @@ belonging to a private Pixiv illustration.
 ## Usage
 
 ```bash
-$ dpi e21424438ac9facb92ab2f50705844d9 'https://www.pixiv.net/member_illust.php?mode=medium&illust_id=75609833'
+$ dpi --username pixivUser --password pixivPassword 75609833
 Preparing Pixiv session
 Retrieving information for Pixiv 1 illustration(s)
 Downloading image https://i.pximg.net/img-original/img/2019/07/08/00/45/05/75609833_p0.jpg

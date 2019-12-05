@@ -1,6 +1,6 @@
 {
   "name": "download-pixiv-manga",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Uses Selenium to downloads all images or the animation belonging to a Pixiv illustration URL",
   "main": "lib/download-pixiv-illustration",
   "scripts": {
@@ -23,10 +23,12 @@
   "dependencies": {
     "commander": "3.0.1",
     "node-alias": "1.0.4",
-    "pixiv-client": "0.3.0"
+    "pixiv-app-api": "1.0.3",
+    "request": "2.88.0"
   },
   "devDependencies": {
     "@types/node": "12.7.5",
+    "@types/request": "2.48.3",
     "@typescript-eslint/eslint-plugin": "2.3.0",
     "@typescript-eslint/parser": "2.3.0",
     "eslint": "6.4.0",

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import * as program from "commander";
+import program from "commander";
 import * as pkg from "../package.json";
 
 import { run } from "../lib/download-pixiv-illustration";
@@ -19,4 +19,4 @@ program
 
 const [...illustrationIds] = program.args;
 
-run(illustrationIds, program.opts());
+run(illustrationIds.map(id => Number.parseInt(id)), program.opts());

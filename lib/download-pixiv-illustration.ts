@@ -1,13 +1,15 @@
 import * as fs from "fs";
 
-import { PixivMobileApi, downloadAsStream } from "pixiv-client/dist";
-import { Illust } from "pixiv-client/dist/mobile/illust";
+import PixivApp from "pixiv-app-api";
+import { PixivIllust } from "pixiv-app-api/dist/PixivTypes";
+
+import request from "request";
 
 type ProgramOptions = {
   [key: string]: string;
 };
 
-function downloadIllustrationImages(pixivIllustration: Illust): void {
+function downloadIllustrationImages(pixivIllustration: PixivIllust): void {
   const { title, user } = pixivIllustration;
 
   const path = `${user.name} (${user.id})/${title}`;
@@ -16,8 +18,18 @@ function downloadIllustrationImages(pixivIllustration: Illust): void {
     fs.mkdirSync(path, { recursive: true });
   }
 
-  pixivIllustration.meta_pages.forEach(page => {
-    const url = new URL(page.image_urls.original);
+
+  // Differ between illustrations having one or more images
+  let images: string[] = [];
+
+  if (pixivIllustration.pageCount === 1) {
+    images.push(pixivIllustration.metaSinglePage.originalImageUrl as string);
+  } else if (pixivIllustration.pageCount > 1) {
+    images = pixivIllustration.metaPages.map(page => page.imageUrls.original);
+  }
+
+  images.forEach(image => {
+    const url = new URL(image);
 
     // Use the filename of the downloaded file
     const parts = url.pathname.split("/");
@@ -25,14 +37,17 @@ function downloadIllustrationImages(pixivIllustration: Illust): void {
 
     console.log(`Downloading image ${url}`);
 
-    downloadAsStream(url.toString()).pipe(
-      fs.createWriteStream(`${path}/${filename}`)
-    );
+    request({
+      url: url.toString(),
+      headers: {
+        Referer: "http://www.pixiv.net/"
+      }
+    }).pipe(fs.createWriteStream(`${path}/${filename}`));
   });
 }
 
 export async function run(
-  illustrationIds: string[] = [],
+  illustrationIds: number[] = [],
   options: ProgramOptions
 ): Promise<void> {
   const { username, password } = options;
@@ -54,23 +69,25 @@ export async function run(
 
   console.log("Preparing Pixiv session");
 
-  const pixivClient = await PixivMobileApi.login({ username, password });
+  const pixivClient = new PixivApp();
+  await pixivClient.login(username, password);
 
   console.log(
     `Retrieving information for Pixiv ${illustrationIds.length} illustration(s)`
   );
 
-  const illustrations: Illust[] = [];
+  const illustrations: PixivIllust[] = [];
 
   for (let i = 0; i < illustrationIds.length; ++i) {
-    const response = await pixivClient.getIllustDetail(illustrationIds[i]);
-
-    if (response.illust) {
-      illustrations.push(response.illust);
-    } else {
+    try {
+      illustrations.push(
+        (await pixivClient.illustDetail(illustrationIds[i])).illust
+      );
+    } catch (err) {
       console.log(
         "Failed to retrieve data for illustration [%d]",
-        illustrationIds[i]
+        illustrationIds[i],
+        err
       );
     }
   }
