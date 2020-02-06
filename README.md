@@ -1,7 +1,9 @@
 # download-pixiv-illustration
 
-Node.js based script using Selenium to download all corresponding images
-belonging to a private Pixiv illustration.
+Node.js based script using [pixiv-app-api] to download all corresponding images
+belonging to a private Pixiv illustration. Downloading Ugoira is also supported
+and uses [ffmpeg] to encode the file int an MJPEG stream put into a Matroska
+container file.
 
 [![Build Status](https://travis-ci.com/NigridsVa/download-pixiv-illustration.svg?branch=master)](https://travis-ci.com/NigridsVa/download-pixiv-illustration)
 
@@ -16,15 +18,15 @@ Downloading image https://i.pximg.net/img-original/img/2019/07/08/00/45/05/75609
 Downloading image https://i.pximg.net/img-original/img/2019/07/08/00/45/05/75609833_p2.jpg
 Downloading image https://i.pximg.net/img-original/img/2019/07/08/00/45/05/75609833_p3.jpg
 
-$ ls -1 空鯨/カムベアスにボコられるゼロ/*.jpg
-空鯨/カムベアスにボコられるゼロ/75609833_p0.jpg
-空鯨/カムベアスにボコられるゼロ/75609833_p1.jpg
-空鯨/カムベアスにボコられるゼロ/75609833_p2.jpg
-空鯨/カムベアスにボコられるゼロ/75609833_p3.jpg
+$ ls -1 空鯨\ \(375067\)/カムベアスにボコられるゼロ/*.jpg
+空鯨 (375067)/カムベアスにボコられるゼロ/75609833_p0.jpg
+空鯨 (375067)/カムベアスにボコられるゼロ/75609833_p1.jpg
+空鯨 (375067)/カムベアスにボコられるゼロ/75609833_p2.jpg
+空鯨 (375067)/カムベアスにボコられるゼロ/75609833_p3.jpg
 ```
 
-The downloaded pictures will be stored in the directory, where `dpi` is
-currently executed from.
+The downloaded pictures will be stored in a directory hierarchy
+(author/illustration_name) using the current working directory.
 
 ## Options
 
@@ -40,8 +42,13 @@ of XPath processing to retrieve the necessary information.
 At least for the retrieving part, a proper browser is needed as JavaScript
 parsing with standard shell tools is no fun at all…
 
+I got a tip that there is actually an API provided by Pixiv, which makes the
+gathering and downloading of the respective data pretty straightforward…
+
 ## Problems?
 
 Please [file an issue].
 
+[pixiv-app-api]: https://github.com/akameco/pixiv-app-api
+[ffmpeg]: https://ffmpeg.org/
 [file an issue]: https://github.com/NigridsVa/download-pixiv-illustration/issues
