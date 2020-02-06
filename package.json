@@ -22,13 +22,19 @@
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "commander": "3.0.1",
+    "fluent-ffmpeg": "2.1.2",
     "node-alias": "1.0.4",
     "pixiv-app-api": "1.0.3",
-    "request": "2.88.0"
+    "request": "2.88.0",
+    "rimraf": "3.0.1",
+    "unzipper": "0.10.7"
   },
   "devDependencies": {
+    "@types/fluent-ffmpeg": "2.1.14",
     "@types/node": "12.7.5",
     "@types/request": "2.48.3",
+    "@types/rimraf": "2.0.3",
+    "@types/unzipper": "0.10.1",
     "@typescript-eslint/eslint-plugin": "2.3.0",
     "@typescript-eslint/parser": "2.3.0",
     "eslint": "6.4.0",
