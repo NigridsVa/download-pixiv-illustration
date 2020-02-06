@@ -70,8 +70,9 @@ function downloadAnimation(
     fs.mkdirSync(downloadPath, { recursive: true });
   }
 
-  const url = new URL(pixivIllustration.metaSinglePage
-    .originalImageUrl as string);
+  const url = new URL(
+    pixivIllustration.metaSinglePage.originalImageUrl as string
+  );
 
   // Use the filename of the downloaded file
   const parts = url.pathname.split("/");
@@ -102,11 +103,10 @@ function downloadAnimation(
 
       ffmpeg()
         .input(path.join(tempPath, "%6d.jpg"))
-        .addInputOption("-start_number 0")
+        .addInputOption("-start_number", "0")
         .withVideoCodec("copy")
-        .saveToFile(outputFile);
-
-      rimraf.sync(tempPath);
+        .saveToFile(outputFile)
+        .on("close", () => rimraf.sync(tempPath));
     });
 }
 
