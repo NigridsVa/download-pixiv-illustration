@@ -5,7 +5,7 @@ import * as path from "path";
 import PixivApp from "pixiv-app-api";
 import { PixivIllust, UgoiraMetaData } from "pixiv-app-api/dist/PixivTypes";
 
-import request from "request";
+import axios from "axios";
 
 import { Extract } from "unzipper";
 
@@ -15,7 +15,7 @@ import rimraf from "rimraf";
 
 enum PixivIllustrationType {
   ILLUSTRATION = "illust",
-  ANIMATION = "ugoira"
+  ANIMATION = "ugoira",
 }
 
 type ProgramOptions = {
@@ -37,10 +37,10 @@ function downloadIllustrationImages(pixivIllustration: PixivIllust): void {
   if (pixivIllustration.pageCount === 1) {
     images.push(pixivIllustration.metaSinglePage.originalImageUrl as string);
   } else if (pixivIllustration.pageCount > 1) {
-    images = pixivIllustration.metaPages.map(page => page.imageUrls.original);
+    images = pixivIllustration.metaPages.map((page) => page.imageUrls.original);
   }
 
-  images.forEach(image => {
+  images.forEach((image) => {
     const url = new URL(image);
 
     // Use the filename of the downloaded file
@@ -49,12 +49,15 @@ function downloadIllustrationImages(pixivIllustration: PixivIllust): void {
 
     console.log(`Downloading image ${url} to ${downloadPath}`);
 
-    request({
+    axios({
       url: url.toString(),
       headers: {
-        Referer: "http://www.pixiv.net/"
-      }
-    }).pipe(fs.createWriteStream(path.join(downloadPath, filename)));
+        Referer: "http://www.pixiv.net/",
+      },
+      responseType: "stream",
+    }).then((res) =>
+      res.data.pipe(fs.createWriteStream(path.join(downloadPath, filename)))
+    );
   });
 }
 
@@ -85,29 +88,32 @@ function downloadAnimation(
 
   console.log(`Downloading animation frames ${url}`);
 
-  request({
+  axios({
     url: animationMetadata.ugoiraMetadata.zipUrls.medium,
     headers: {
-      Referer: "http://www.pixiv.net/"
-    }
-  })
-    .pipe(
-      Extract({
-        path: tempPath
+      Referer: "http://www.pixiv.net/",
+    },
+    responseType: "stream",
+  }).then((res) =>
+    res.data
+      .pipe(
+        Extract({
+          path: tempPath,
+        })
+      )
+      .on("close", () => {
+        const outputFile = path.join(downloadPath, `${filename}.mkv`);
+
+        console.log("Created animation ", outputFile);
+
+        ffmpeg()
+          .input(path.join(tempPath, "%6d.jpg"))
+          .addInputOption("-start_number", "0")
+          .withVideoCodec("copy")
+          .saveToFile(outputFile)
+          .on("close", () => rimraf.sync(tempPath));
       })
-    )
-    .on("close", () => {
-      const outputFile = path.join(downloadPath, `${filename}.mkv`);
-
-      console.log("Created animation ", outputFile);
-
-      ffmpeg()
-        .input(path.join(tempPath, "%6d.jpg"))
-        .addInputOption("-start_number", "0")
-        .withVideoCodec("copy")
-        .saveToFile(outputFile)
-        .on("close", () => rimraf.sync(tempPath));
-    });
+  );
 }
 
 export async function run(
@@ -127,7 +133,7 @@ export async function run(
   }
 
   // exit with non-zero error code when there is an unhandled promise rejection
-  process.on("unhandledRejection", err => {
+  process.on("unhandledRejection", (err) => {
     throw err;
   });
 
