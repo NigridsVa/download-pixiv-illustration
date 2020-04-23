@@ -47,7 +47,7 @@ function downloadIllustrationImages(pixivIllustration: PixivIllust): void {
     const parts = url.pathname.split("/");
     const filename = parts[parts.length - 1];
 
-    console.log(`Downloading image ${url}`);
+    console.log(`Downloading image ${url} to ${downloadPath}`);
 
     request({
       url: url.toString(),
