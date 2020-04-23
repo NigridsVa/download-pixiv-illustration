@@ -5,7 +5,7 @@ import * as path from "path";
 import PixivApp from "pixiv-app-api";
 import { PixivIllust, UgoiraMetaData } from "pixiv-app-api/dist/PixivTypes";
 
-import request from "request";
+import axios from "axios";
 
 import { Extract } from "unzipper";
 
@@ -49,12 +49,15 @@ function downloadIllustrationImages(pixivIllustration: PixivIllust): void {
 
     console.log(`Downloading image ${url} to ${downloadPath}`);
 
-    request({
+    axios({
       url: url.toString(),
       headers: {
         Referer: "http://www.pixiv.net/",
       },
-    }).pipe(fs.createWriteStream(path.join(downloadPath, filename)));
+      responseType: "stream",
+    }).then((res) =>
+      res.data.pipe(fs.createWriteStream(path.join(downloadPath, filename)))
+    );
   });
 }
 
@@ -85,29 +88,32 @@ function downloadAnimation(
 
   console.log(`Downloading animation frames ${url}`);
 
-  request({
+  axios({
     url: animationMetadata.ugoiraMetadata.zipUrls.medium,
     headers: {
       Referer: "http://www.pixiv.net/",
     },
-  })
-    .pipe(
-      Extract({
-        path: tempPath,
+    responseType: "stream",
+  }).then((res) =>
+    res.data
+      .pipe(
+        Extract({
+          path: tempPath,
+        })
+      )
+      .on("close", () => {
+        const outputFile = path.join(downloadPath, `${filename}.mkv`);
+
+        console.log("Created animation ", outputFile);
+
+        ffmpeg()
+          .input(path.join(tempPath, "%6d.jpg"))
+          .addInputOption("-start_number", "0")
+          .withVideoCodec("copy")
+          .saveToFile(outputFile)
+          .on("close", () => rimraf.sync(tempPath));
       })
-    )
-    .on("close", () => {
-      const outputFile = path.join(downloadPath, `${filename}.mkv`);
-
-      console.log("Created animation ", outputFile);
-
-      ffmpeg()
-        .input(path.join(tempPath, "%6d.jpg"))
-        .addInputOption("-start_number", "0")
-        .withVideoCodec("copy")
-        .saveToFile(outputFile)
-        .on("close", () => rimraf.sync(tempPath));
-    });
+  );
 }
 
 export async function run(
